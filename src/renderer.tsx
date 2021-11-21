@@ -26,6 +26,10 @@
  * ```
  */
 
+import { render } from 'preact';
+import App from './app'
 import './index.css';
 
 console.log('👋 This message is being logged by "renderer.js", included via webpack');
+render(<App />, document.getElementById('root'));
+
