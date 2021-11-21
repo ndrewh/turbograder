@@ -5,14 +5,15 @@ import { GradingContext } from '../state/grading_context'
 
 type ConfigProps = {
     name: String,
-    gradingContext: GradingContext
+    gradingContext: GradingContext,
+    updateGradingContext: (ctx: GradingContext) => void
 }
 
 type ConfigState = {
 }
 
 
-const renderConfig = ({ gradingContext }: ConfigProps) => {
+const renderConfig = ({ gradingContext, updateGradingContext }: ConfigProps) => {
 
     // const loggedOut = !localStorage.token
     const [courses, setCourses] = useState([])
@@ -37,7 +38,11 @@ const renderConfig = ({ gradingContext }: ConfigProps) => {
 
     const handleCourseChange = useCallback((e: any) => {
         setSelectedCourse(e.target.value)
-        getQuizzes(e.target.value).then(data => setQuizzes(data))
+        getQuizzes(e.target.value).then(data => {
+            if (!('message' in data)) {
+                setQuizzes(data)
+            }
+        })
     }, [])
     const handleQuizChange = useCallback((e: any) => setSelectedQuiz(e.target.value), [])
 
@@ -45,6 +50,7 @@ const renderConfig = ({ gradingContext }: ConfigProps) => {
         // Save token, reload courses
         gradingContext.course_id = selectedCourse
         gradingContext.quiz_id = selectedQuiz
+        updateGradingContext(gradingContext)
     }, [selectedCourse, selectedQuiz, gradingContext])
 
 

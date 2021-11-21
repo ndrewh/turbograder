@@ -8,6 +8,8 @@ import Home from './components/home'
 import Grade from './components/grade'
 import Header from './components/header'
 import { createHashHistory } from 'history';
+import { GradingContext } from './state/grading_context'
+import { getSubmissions } from './api/canvas'
 
 
 
@@ -20,12 +22,22 @@ function renderApp() {
     const triggerRerender = useTriggerRerender()
     const [gradingContext, setGradingContext] = useState({ course_id: "", quiz_id: "" })
 
+    const updateGradingContext = useCallback((context: GradingContext) => {
+        console.log("[App] Grading context updated")
+        console.log(context)
+        setGradingContext(context);
+
+        getSubmissions(context, () => { }).then((submissions) => {
+            console.log(submissions)
+        })
+    }, [gradingContext])
+
     // const loggedOut = !localStorage.token
 
     const paths = [
         <Home path="/" key="home" name="Home" />,
-        <Grade path="/grade" key="grade" name="Grade" />,
-        <Configure path="/configure" key="configure" name="Configure" gradingContext={gradingContext} />
+        <Grade path="/grade" key="grade" name="Grade" gradingContext={gradingContext} />,
+        <Configure path="/configure" key="configure" name="Configure" gradingContext={gradingContext} updateGradingContext={updateGradingContext} />
     ]
 
     const headerProps = {
