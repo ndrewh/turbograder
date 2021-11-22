@@ -13,8 +13,8 @@ This replaces ugly python scripts I have been using for a while. A web app doesn
 Status
 ----
 
-[x] Token input
-[x] Course/quiz selection (list from API)
-[x] Pull quiz responses from API
-[ ] Grading UX
+- [x] Token input
+- [x] Course/quiz selection (list from API)
+- [x] Pull quiz responses from API
+- [ ] Grading UX
 
