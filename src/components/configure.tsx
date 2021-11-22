@@ -53,29 +53,57 @@ const renderConfig = ({ gradingContext, updateGradingContext }: ConfigProps) => 
         updateGradingContext(gradingContext)
     }, [selectedCourse, selectedQuiz, gradingContext])
 
+    useEffect(() => {
+        console.log("effect")
+        console.log(selectedCourse)
+        if (token.length > 0) {
+            getCourses().then(data => setCourses(data)).then(() => {
+                if (selectedCourse.length > 0) {
+                    getQuizzes(selectedCourse).then(data => {
+                        if (!('message' in data)) {
+                            setQuizzes(data)
+                        }
+                    })
+                }
+            })
+        }
+    }, [token, selectedCourse, selectedQuiz])
+
 
 
     return (
-        <div class='card'>
+        <div class='card padded-more'>
             <h2>Configure</h2>
-            <input autocorrect='off' name='token' placeholder='token' type='text' value={token} onChange={handleTokenChange} />
-            <button class="btn-small" onClick={updateConfig}>Save token</button>
-            <select value={selectedCourse} onChange={handleCourseChange}>
-                {
-                    courses.map(course => {
-                        return <option value={course.id}>{course.name}</option>
-                    })
-                }
-            </select>
-            <select value={selectedQuiz} onChange={handleQuizChange}>
-                {
-                    quizzes.map(quiz => {
-                        return <option value={quiz.id}>{quiz.title}</option>
-                    })
-                }
-            </select>
-
-            <button class="btn-small" onClick={updateContext}>Save</button>
+            <form>
+                <div class="form-group">
+                    <label>Token</label>
+                    <input class="form-control" autocorrect='off' name='token' placeholder='token' type='text' value={token} onChange={handleTokenChange} />
+                    <a class="btn btn-form btn-default" onClick={updateConfig}>Save token</a>
+                </div>
+                <div class="form-group">
+                    <label>Course</label>
+                    <select class="form-control" value={selectedCourse} onChange={handleCourseChange}>
+                        {
+                            courses.map(course => {
+                                return <option value={course.id}>{course.name}</option>
+                            })
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quiz</label>
+                    <select class="form-control" value={selectedQuiz} onChange={handleQuizChange}>
+                        {
+                            quizzes.map(quiz => {
+                                return <option value={quiz.id}>{quiz.title}</option>
+                            })
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <a class="btn btn-form btn-default" onClick={updateContext}>Save</a>
+                </div>
+            </form>
         </div>
     )
 }

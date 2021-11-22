@@ -1,17 +1,20 @@
 import { Component } from 'preact'
-import { useEffect } from 'preact/hooks'
-import { GradingContext } from '../state/grading_context'
+import { useEffect, useState, useCallback } from 'preact/hooks'
+import { GradingContext, Submission, QuizData } from '../state/grading_context'
+import GradePane from './grade/grade_pane'
 
 type GradeProps = {
     name: string,
-    gradingContext: GradingContext
+    gradingContext: GradingContext,
+    quizData: QuizData
 }
 
 type GradeState = {
 
 }
 
-const renderGrade = ({ gradingContext }: GradeProps) => {
+const renderGrade = ({ gradingContext, quizData }: GradeProps) => {
+    const [selectedQuestion, setSelectedQuestion] = useState("")
 
     // const loggedOut = !localStorage.token
 
@@ -21,8 +24,36 @@ const renderGrade = ({ gradingContext }: GradeProps) => {
 
     }, [gradingContext])
 
+    const selectQuestion = useCallback((e: any) => {
+        setSelectedQuestion(e.currentTarget.dataset.questionId)
+    }, [])
+
     return (
-        <h2>Grade</h2>
+        <div>
+            <div class="pane-group">
+                <div class="pane-sm sidebar">
+                    <ul class="list-group">
+                        {
+                            Object.keys(quizData.questions).map((q_id) => {
+                                const q = quizData.questions[q_id]
+                                return (
+                                    <li class={"list-group-item" + (selectedQuestion == q_id ? " active" : "")} data-question-id={q_id} onClick={selectQuestion}>
+                                        <div class="media-body">
+                                            <strong>{q.question_name} ({q.id})</strong>
+                                            <p>{q.question_text}</p>
+                                        </div>
+                                    </li>
+                                )
+                            })
+
+                        }
+                    </ul>
+                </div>
+                <div class="pane">
+                    <GradePane question={quizData.questions[selectedQuestion]} submissions={quizData.submissions} />
+                </div>
+            </div>
+        </div>
     )
 }
 

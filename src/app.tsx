@@ -21,22 +21,24 @@ function useTriggerRerender() {
 function renderApp() {
     const triggerRerender = useTriggerRerender()
     const [gradingContext, setGradingContext] = useState({ course_id: "", quiz_id: "" })
+    const [quizData, setQuizData] = useState({ submissions: [], questions: {} })
 
     const updateGradingContext = useCallback((context: GradingContext) => {
         console.log("[App] Grading context updated")
         console.log(context)
         setGradingContext(context);
 
-        getSubmissions(context, () => { }).then((submissions) => {
-            console.log(submissions)
+        getSubmissions(context, () => { }).then((quizData) => {
+            console.log(quizData)
+            setQuizData(quizData)
         })
-    }, [gradingContext])
+    }, [])
 
     // const loggedOut = !localStorage.token
 
     const paths = [
         <Home path="/" key="home" name="Home" />,
-        <Grade path="/grade" key="grade" name="Grade" gradingContext={gradingContext} />,
+        <Grade path="/grade" key="grade" name="Grade" gradingContext={gradingContext} quizData={quizData} />,
         <Configure path="/configure" key="configure" name="Configure" gradingContext={gradingContext} updateGradingContext={updateGradingContext} />
     ]
 
@@ -45,11 +47,13 @@ function renderApp() {
     }
 
     return (
-        <div>
+        <div class="window">
             <Header {...headerProps} />
-            <Router onChange={triggerRerender} history={createHashHistory() as unknown as CustomHistory}>
-                {paths}
-            </Router>
+            <div class="window-content">
+                <Router onChange={triggerRerender} history={createHashHistory() as unknown as CustomHistory}>
+                    {paths}
+                </Router>
+            </div>
         </div>
     )
 }

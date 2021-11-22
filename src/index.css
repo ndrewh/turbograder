@@ -4,3 +4,30 @@ body {
   max-width: 38rem;
   padding: 2rem;
 }
+
+.question_view {
+  max-height: 100px;
+  overflow: scroll;
+  border-bottom: solid 1px;
+}
+
+.question-config {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.num-answers-tag {
+  position: absolute;
+  right: 5px;
+  padding: 3px;
+  border-radius: 10px;
+  position: absolute;
+}
+
+.card-footer-item.active {
+  background-color: #3e8ed0;
+  border-color: transparent;
+  color: #fff;
+}
