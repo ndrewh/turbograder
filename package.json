@@ -86,6 +86,7 @@
     "fork-ts-checker-webpack-plugin": "^6.0.1",
     "history": "^5.1.0",
     "node-loader": "^2.0.0",
+    "photonkit": "^0.1.2",
     "preact": "^10.5.15",
     "preact-cli": "^3.3.2",
     "preact-markup": "^2.1.1",
