@@ -42,7 +42,7 @@ const renderGrade = ({ question, submissions, update_num_to_save }: GradePanePro
     const updateMaxPoints = useCallback((e: any) => {
         setMaxPoints(e.target.value)
         question.max_points = e.target.value;
-    }, [])
+    }, [question])
 
     const groupInfo = useMemo(() => {
         /* Determine if each group has a coherent score and comment */
@@ -100,7 +100,7 @@ const renderGrade = ({ question, submissions, update_num_to_save }: GradePanePro
             values.push(Math.round((question.max_points / 4.0) * i / alignment) * alignment)
         }
         return values
-    }, [maxPoints])
+    }, [maxPoints, question])
 
     /* Compute statistics */
 
@@ -139,7 +139,7 @@ const renderGrade = ({ question, submissions, update_num_to_save }: GradePanePro
                         <form>
                             <div class="form-group">
                                 <label>Max Points</label>
-                                <input class="form-control" autocorrect='off' name='maxPoints' placeholder='max' type='number' value={question.max_points} onChange={updateMaxPoints} />
+                                <input class="form-control" autocorrect='off' name='maxPoints' placeholder='max' type='number' value={maxPoints} onChange={updateMaxPoints} />
                             </div>
                         </form>
                     </div>
@@ -150,7 +150,7 @@ const renderGrade = ({ question, submissions, update_num_to_save }: GradePanePro
                             ordered_responses.map((text, idx) => {
                                 const count = responses_for_question[text].length
                                 return (<li class="list-group-item" data-idx={idx}>
-                                    <div class="card">
+                                    <div class="card student-response">
                                         <span class="tag is-info num-answers-tag">{count}x</span>
                                         <Markup type="html" markup={text} class="card-content" />
                                         <div class="form-group">
@@ -162,7 +162,7 @@ const renderGrade = ({ question, submissions, update_num_to_save }: GradePanePro
                                                     return (<a class={"card-footer-item" + (x == groupInfo[text].score ? " active" : "")} data-points={x} data-idx={idx} onClick={assignGradeToGroup}>{x}</a>)
                                                 })
                                             }
-                                            <a class="card-footer-item" data-idx={idx}><input class="form-control" autocorrect='off' name='maxPoints' placeholder='max' type='text' value={question.max_points} /></a>
+                                            <a class="card-footer-item" data-idx={idx}><input class="form-control" autocorrect='off' name='maxPoints' placeholder='max' type='text' value={maxPoints} /></a>
                                         </footer>
                                     </div>
                                 </li>)
@@ -180,7 +180,7 @@ const renderGrade = ({ question, submissions, update_num_to_save }: GradePanePro
                         {
                             graded.map((response, idx) => {
                                 return (<li class="list-group-item" data-idx={idx} key={response.submission_id}>
-                                    <div class="card">
+                                    <div class="card student-response">
                                         <Markup type="html" markup={response.content} class="card-content" />
                                         <div class="columns padded">
                                             <div class="column is-one-third">

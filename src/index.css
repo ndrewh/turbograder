@@ -31,3 +31,7 @@ body {
   border-color: transparent;
   color: #fff;
 }
+
+.card.student-response * {
+  white-space: normal;
+}

@@ -2,11 +2,11 @@ import { GradingContext, Response, Submission, QuizData } from "../state/grading
 import { request } from "./util";
 
 export const getCourses = async () => {
-    return await request('GET', '/api/v1/courses', { enrollment_state: "active" })
+    return await request('GET', '/api/v1/courses', { enrollment_state: "active", per_page: 100 })
 }
 
 export const getQuizzes = async (course_id: string) => {
-    return await request('GET', `/api/v1/courses/${course_id}/quizzes`)
+    return await request('GET', `/api/v1/courses/${course_id}/quizzes`, { per_page: 100 })
 }
 
 export const getSubmissions = async (grading_context: GradingContext, progress: (percent: Number) => void): Promise<QuizData> => {
