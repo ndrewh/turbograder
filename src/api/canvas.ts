@@ -38,7 +38,7 @@ export const getSubmissions = async (grading_context: GradingContext, progress: 
         const questions = latest_submission_data.submission_data.reduce((prev: { [key: string]: Response }, x: any): { [key: string]: Response } => {
             if (!['essay_question', 'short_answer_question'].includes(questions_map[x.question_id].question_type)) return prev;
             const points = x.correct === "undefined" ? null : x.points
-            const comment = x.more_comments
+            const comment = x.more_comments ?? ""
             return {
                 [x.question_id]: { question_id: x.question_id, content: x.text, old_points: points, cur_points: points, old_comment: comment, cur_comment: comment, submission_id: latest_submission_data.id },
                 ...prev
@@ -50,11 +50,34 @@ export const getSubmissions = async (grading_context: GradingContext, progress: 
         const submission: Submission = {
             submission_id: latest_submission_data.id,
             student_id: latest_submission_data.user_id,
-            questions: questions
+            questions: questions,
+            attempt: latest_submission_data.attempt
         }
         return submission
     })
     )
 
     return { submissions: all_submissions.filter((x: any) => x != null), questions: all_questions };
+}
+
+export const putSubmissions = async (quiz_data: QuizData, grading_context: GradingContext) => {
+    await Promise.all(quiz_data.submissions.map(async (submission) => {
+        const questions = Object.entries(submission.questions).filter(([q_id, response]) => {
+            return response.old_points != response.cur_points || response.old_comment != response.cur_comment
+        }).map(([q_id, response]) => [q_id, { "score": response.cur_points, "comment": response.cur_comment }])
+
+        if (questions.length == 0) return null
+        const data = {
+            "quiz_submissions": [{
+                "attempt": submission.attempt,
+                "questions": Object.fromEntries(questions)
+            }]
+        }
+        const resp = await request('PUT', `/api/v1/courses/${grading_context.course_id}/quizzes/${grading_context.quiz_id}/submissions/${submission.submission_id}`, data)
+        /* Update the old_comment and old_points fields to reflect the new server state */
+        if (!('errors' in resp)) {
+            Object.values(submission.questions).forEach((x) => { x.old_comment = x.cur_comment; x.old_points = x.cur_points; })
+        }
+        return resp
+    }))
 }

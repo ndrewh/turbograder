@@ -4,40 +4,28 @@ import Match from 'preact-router/match'
 import { useCallback } from 'preact/hooks'
 
 type HeaderProps = {
-    paths: Array<{ props: { path: string, name: string } }>
+    paths: Array<{ key: string, props: { path: string, name: string } }>
+    icons: { [key: string]: string }
+    num_to_save: number
+    upload_handler: () => void
 }
 
 type HeaderState = {
 
 }
-const renderHome = ({ paths }: HeaderProps) => {
-
-    // const loggedOut = !localStorage.token
-    /*
-                    {
-                        paths.map(({ props: { path, name } }) =>
-                            <Match key={name} path={path}>
-                                {({ matches }: { matches: boolean }) => (
-                                    <li class={matches ? 'selected' : ''}>
-                                        <a href={path}>{name}</a>
-                                    </li>
-                                )}
-                            </Match>
-                        )
-                    }
-                    */
-    const paths_info = paths.map(({ props: { path, name } }) => { return { path: path, name: name, route: useCallback(() => route(path), [path]) } })
+const renderHome = ({ paths, num_to_save, upload_handler, icons }: HeaderProps) => {
+    const paths_info = paths.map(({ props, key }) => { return { ...props, icon: icons[key], route: useCallback(() => route(props.path), [props.path]) } })
     return (
         <header class="toolbar toolbar-header">
             <h1 class="title">Turbograder</h1>
             <div class="toolbar-actions">
                 <div class="btn-group">
                     {
-                        paths_info.map(({ path, name, route }) =>
+                        paths_info.map(({ path, name, route, icon }) =>
                             <Match key={name} path={path}>
                                 {({ matches }: { matches: boolean }) => (
                                     <button class={"btn btn-default" + (matches ? " active" : "")} onClick={route}>
-                                        <span class="icon icon-home icon-text"></span>
+                                        <span class={`icon icon-${icon} icon-text`}></span>
                                         {name}
                                     </button>
                                 )}
@@ -45,8 +33,17 @@ const renderHome = ({ paths }: HeaderProps) => {
                         )
                     }
                 </div>
+                <Match key="grade" path="/grade">
+                    {({ matches }: { matches: boolean }) => (
+                        matches &&
+                        <button class="btn btn-default pull-right" onClick={upload_handler}>
+                            <span class="icon icon-upload icon-text"></span>
+                            Submit all ({num_to_save})
+                        </button>
+                    )}
+                </Match>
             </div>
-        </header>
+        </header >
     )
 }
 

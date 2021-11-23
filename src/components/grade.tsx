@@ -7,14 +7,18 @@ type GradeProps = {
     name: string,
     gradingContext: GradingContext,
     quizData: QuizData
+    update_num_to_save: (num: number) => void
 }
 
 type GradeState = {
 
 }
 
-const renderGrade = ({ gradingContext, quizData }: GradeProps) => {
+const renderGrade = ({ gradingContext, quizData, update_num_to_save }: GradeProps) => {
     const [selectedQuestion, setSelectedQuestion] = useState("")
+
+    const initial: { [key: string]: number } = {}
+    const [numChangedByQuestion, setNumChangedByQuestion] = useState(initial)
 
     // const loggedOut = !localStorage.token
 
@@ -27,6 +31,15 @@ const renderGrade = ({ gradingContext, quizData }: GradeProps) => {
     const selectQuestion = useCallback((e: any) => {
         setSelectedQuestion(e.currentTarget.dataset.questionId)
     }, [])
+
+    const updateNumChanged = useCallback((q_id: string, num: number) => {
+        setNumChangedByQuestion((x) => { return { ...x, [q_id]: num, } })
+    }, [])
+
+    useEffect(() => {
+        /* Compute total number of responses which will be updated */
+        update_num_to_save(Object.values(numChangedByQuestion).reduce((n: number, next: number) => (n + next), 0));
+    }, [numChangedByQuestion])
 
     return (
         <div>
@@ -50,7 +63,7 @@ const renderGrade = ({ gradingContext, quizData }: GradeProps) => {
                     </ul>
                 </div>
                 <div class="pane">
-                    <GradePane question={quizData.questions[selectedQuestion]} submissions={quizData.submissions} />
+                    <GradePane question={quizData.questions[selectedQuestion]} submissions={quizData.submissions} update_num_to_save={updateNumChanged} />
                 </div>
             </div>
         </div>

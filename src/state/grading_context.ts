@@ -16,7 +16,8 @@ export type Response = {
 export type Submission = {
     submission_id: string,
     student_id: string,
-    questions: { [key: string]: Response }
+    questions: { [key: string]: Response },
+    attempt: number
 }
 
 export type QuizData = {

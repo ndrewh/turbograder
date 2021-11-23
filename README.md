@@ -16,5 +16,5 @@ Status
 - [x] Token input
 - [x] Course/quiz selection (list from API)
 - [x] Pull quiz responses from API
-- [ ] Grading UX
+- [x] Grading UX (mostly working)
 
