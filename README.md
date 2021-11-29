@@ -12,6 +12,18 @@ You provide a Canvas API key as input, select a course and quiz, and then it wil
 This replaces ugly python scripts I have been using for a while. A web app doesn't cut it here, since I don't want to have to proxy to get around CORS.
 
 
+How to use
+-----
+
+note: currently it is hard-coded to use https://osu.instructure.edu ... if you want to use a difference instance, this needs to be changed.
+
+Running this should be as simple as cloning the repo and running:
+
+```
+npm start
+```
+
+
 Status
 ----
 
