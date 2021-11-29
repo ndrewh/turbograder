@@ -72,7 +72,7 @@ const renderGrade = ({ question, submissions, update_num_to_save }: GradePanePro
 
     const assignGradeToGroup = useCallback((e: any) => {
         const submissions = responses_for_question[ordered_responses[e.currentTarget.dataset.idx]]
-        const points = e.currentTarget.dataset.points ?? e.currentTarget.children[0].value
+        const points = e.currentTarget.dataset.points ?? e.currentTarget.value
         submissions.forEach((s) => { s.questions[question.id].cur_points = points })
         setUpdateCount((updateCount) => updateCount + 1)
     }, [submissions, question, responses_for_question])
@@ -162,7 +162,7 @@ const renderGrade = ({ question, submissions, update_num_to_save }: GradePanePro
                                                     return (<a class={"card-footer-item" + (x == groupInfo[text].score ? " active" : "")} data-points={x} data-idx={idx} onClick={assignGradeToGroup}>{x}</a>)
                                                 })
                                             }
-                                            <a class="card-footer-item" data-idx={idx}><input class="form-control" autocorrect='off' name='maxPoints' placeholder='max' type='text' value={maxPoints} /></a>
+                                            <a class="card-footer-item" data-idx={idx}><input class="form-control" autocorrect='off' name='maxPoints' placeholder='max' type='text' value={groupInfo[text].score ?? ""} data-idx={idx} onChange={assignGradeToGroup} /></a>
                                         </footer>
                                     </div>
                                 </li>)
