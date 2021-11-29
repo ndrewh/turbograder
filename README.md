@@ -15,13 +15,19 @@ This replaces ugly python scripts I have been using for a while. A web app doesn
 How to use
 -----
 
-note: currently it is hard-coded to use https://osu.instructure.edu ... if you want to use a difference instance, this needs to be changed.
+note: currently it is hard-coded to use https://osu.instructure.edu ... if you want to use a different instance, this needs to be changed.
 
 Running this should be as simple as cloning the repo and running:
 
 ```
 npm start
 ```
+
+Then go to the "Configure" tab, generate a new access token on https://osu.instructure.com/profile/settings and enter it there. 
+
+After pressing save on the token, it will load a list of classes, and then after selecting a class it will load a list of quizzes. Once you have selected a quiz and class and pressed "Save", return to the "Grade" tab and in a moment it will load.
+
+Pre-built binaries coming soon, if there is demand.
 
 
 Status
